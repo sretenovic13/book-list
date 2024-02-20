@@ -10,14 +10,16 @@ class UI {
     addBookToList(book) {
         const list = document.getElementById('book-list')
         const row = document.createElement('tr')
+
         row.innerHTML = `
         <td>${book.title}</td>
         <td>${book.author}</td>
         <td>${book.isbn}</td>
-        <td><a> href="" class="delete"<a/></td>
+        <td><a class="delete">X<a/></td>
         `
         list.appendChild(row)
     }
+
     showAlert(message, className) {
         const div = document.createElement('div')
 
@@ -25,18 +27,21 @@ class UI {
         div.appendChild(document.createTextNode(message))
 
         const container = document.querySelector('.container')
-        const form = document.querySelector('#book-fomr')
+        const form = document.getElementById('book-form')
 
         container.insertBefore(div, form)
-        setTimeout(function(){
+
+        setTimeout(() => {
             document.querySelector('.alert').remove()
         }, 3000)
     }
+
     deleteBook(target) {
         if(target.className === 'delete'){
             target.parentElement.parentElement.remove()
         }
     }
+
     clearFields(){
         document.getElementById('title').value = ''
         document.getElementById('author').value = ''
@@ -44,14 +49,15 @@ class UI {
     }
 }
 
-document.getElementById('book-form').addEventListener('submit', function(e){
+document.getElementById('book-form').addEventListener('submit', (e)=>{
+    e.preventDefault()
     const title = document.getElementById('title').value
     const author = document.getElementById('author').value
     const isbn = document.getElementById('isbn').value
     
     const book = new Book(title, author, isbn)
+
     const ui = new UI()
-    
     if(title === '' || author === '' || isbn === '' ){
         ui.showAlert('Popuni sva polja', 'error')
     } else {
@@ -59,12 +65,11 @@ document.getElementById('book-form').addEventListener('submit', function(e){
         ui.showAlert('Knjiga je dodata', 'success')
         ui.clearFields()
     }
-    e.preventDefault()
 })
 
-document.getElementById('book-list').addEventListener('click', function(e){
+document.getElementById('book-list').addEventListener('click', (e)=>{
     const ui = new UI
+
     ui.deleteBook(e.target)
     ui.showAlert('Obrisali ste knjigu!', 'success')
-    e.preventDefault()
 })
